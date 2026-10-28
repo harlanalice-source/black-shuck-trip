@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Black Shuck Road Trip</title>
+<style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400;9..144,600;9..144,700,100&family=Public+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: one column of grouped lists, a sticky voter bar, summary before detail.
+   Palette from the subject: East Anglian flint, reed and straw, with a black dog. */
+:root{
+  --bg:#f3efe4; --panel:#fbf9f2; --ink:#1c1b17; --muted:#6b665a; --line:#d9d2c0;
+  --accent:#2f3a5c; --accent-ink:#ffffff; --straw:#d9b86a;
+  --yes:#2e6b45; --yes-bg:#dcebdf; --maybe:#8a5a12; --maybe-bg:#f3e4c2; --no:#7a2f2f; --no-bg:#efd6d2;
+  --chip:#e9e3d3; --shadow:0 1px 0 rgba(28,27,23,.06);
+  --display:"Fraunces",Georgia,"Times New Roman",serif;
+  --body:"Public Sans",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#15171c; --panel:#1e2128; --ink:#ece7d9; --muted:#a39e90; --line:#363a44;
+  --accent:#c9b06a; --accent-ink:#15171c; --straw:#c9b06a;
+  --yes:#8fd1a6; --yes-bg:#1f3a2a; --maybe:#e6b86a; --maybe-bg:#3d3015; --no:#e59b95; --no-bg:#432326;
+  --chip:#2a2e37; --shadow:none; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#15171c; --panel:#1e2128; --ink:#ece7d9; --muted:#a39e90; --line:#363a44;
+  --accent:#c9b06a; --accent-ink:#15171c; --straw:#c9b06a;
+  --yes:#8fd1a6; --yes-bg:#1f3a2a; --maybe:#e6b86a; --maybe-bg:#3d3015; --no:#e59b95; --no-bg:#432326;
+  --chip:#2a2e37; --shadow:none; color-scheme:dark }
+
+html,body{background:var(--bg);color:var(--ink)}
+body{font-family:var(--body);font-size:15px;line-height:1.45;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+*{box-sizing:border-box}
+h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.1;margin:0;text-wrap:balance}
+h1{font-size:clamp(28px,5vw,40px);font-variation-settings:"SOFT" 100}
+h2{font-size:22px;margin-top:8px}
+h3{font-size:16px;font-family:var(--body);font-weight:600}
+p{margin:0}
+.wrap{max-width:860px;margin:0 auto}
+.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+header.top{padding-block:28px 12px;display:grid;gap:10px}
+.dates{color:var(--muted);font-size:15px}
+.fixed{display:flex;gap:14px;align-items:flex-start;border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:14px 16px;box-shadow:var(--shadow)}
+.fixed .dog{width:44px;height:44px;flex:0 0 44px}
+.fixed strong{font-family:var(--display);font-size:18px;font-weight:600}
+.fixed p{color:var(--muted);font-size:14px;margin-top:2px}
+
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding-block:10px;margin-bottom:18px}
+.bar .row{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between}
+.who{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.who label{font-size:13px;color:var(--muted);font-weight:600}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:var(--panel)}
+.seg button{border:0;background:transparent;color:var(--ink);padding:7px 14px;font:inherit;font-size:14px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.seg button:focus-visible{outline:2px solid var(--straw);outline-offset:-2px}
+.status{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.status .dot{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+.status.live .dot{background:var(--yes)}
+.status.off .dot{background:var(--no)}
+.clear{border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:999px;padding:4px 10px;font:inherit;font-size:12px;cursor:pointer;margin-top:6px}
+.clear:focus-visible{outline:2px solid var(--straw)}
+.status .clear{margin-top:0}
+.notice{border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:12px 14px;font-size:14px;color:var(--muted);margin-bottom:16px}
+
+.summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:24px}
+@media (max-width:560px){.summary{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;min-width:0;box-shadow:var(--shadow)}
+.card .n{font-family:var(--display);font-size:32px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1}
+.card ul{margin:8px 0 0;padding-left:18px;font-size:14px}
+.card li{margin:2px 0}
+.card .empty{color:var(--muted);font-size:14px;margin-top:6px}
+
+section.group{margin-bottom:28px}
+section.group h2{display:flex;align-items:baseline;gap:10px}
+section.group h2 small{font-family:var(--body);font-size:13px;color:var(--muted);font-weight:500}
+.lead{color:var(--muted);font-size:14px;margin:4px 0 10px;max-width:65ch}
+.items{display:grid;gap:8px}
+.item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 16px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;box-shadow:var(--shadow)}
+@media (max-width:560px){.item{grid-template-columns:1fr}}
+.item .txt{min-width:0}
+.item .txt p{color:var(--muted);font-size:14px;margin-top:2px}
+.item .txt .meta{font-size:12px;color:var(--muted);margin-top:4px}
+.vote{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--bg)}
+.vote button{border:0;background:transparent;color:var(--muted);padding:7px 12px;font:inherit;font-size:13px;font-weight:600;cursor:pointer;min-width:56px}
+.vote button+button{border-left:1px solid var(--line)}
+.vote button:disabled{cursor:not-allowed;opacity:.5}
+.vote button:focus-visible{outline:2px solid var(--straw);outline-offset:-2px}
+.vote button[data-v="yes"][aria-pressed="true"]{background:var(--yes-bg);color:var(--yes)}
+.vote button[data-v="maybe"][aria-pressed="true"]{background:var(--maybe-bg);color:var(--maybe)}
+.vote button[data-v="no"][aria-pressed="true"]{background:var(--no-bg);color:var(--no)}
+.tally{grid-column:1 / -1;display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-height:22px}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--chip);color:var(--muted)}
+.chip.yes{background:var(--yes-bg);color:var(--yes)}
+.chip.maybe{background:var(--maybe-bg);color:var(--maybe)}
+.chip.no{background:var(--no-bg);color:var(--no)}
+.chip.all{background:var(--accent);color:var(--accent-ink)}
+
+.choice{display:grid;gap:8px}
+.choice .opt{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:start;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;cursor:pointer}
+.choice .opt input{margin-top:4px}
+.choice .opt p{color:var(--muted);font-size:14px}
+.choice .opt .tally{margin-top:6px}
+textarea{width:100%;min-height:84px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--ink);font:inherit;font-size:14px;padding:10px 12px;resize:vertical}
+textarea:focus-visible{outline:2px solid var(--straw)}
+.notes{display:grid;gap:10px}
+.note{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:14px;white-space:pre-wrap}
+.note b{display:block;font-size:12px;color:var(--muted);margin-bottom:2px}
+footer{color:var(--muted);font-size:13px;margin-top:32px;max-width:65ch}
+.sr{position:absolute;left:-9999px}
+@media (prefers-reduced-motion:no-preference){.vote button,.seg button{transition:background .15s,color .15s}}
+.me{font-family:var(--display);font-size:18px;font-weight:600}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">Alice, Sal and Tor</div>
+  <h1>Black Shuck Road Trip</h1>
+  <p class="dates">Thursday 5 to Monday 9 August 2027. Essex, Suffolk and Norfolk. Four nights, one car.</p>
+  <div class="fixed">
+    <svg class="dog" viewBox="0 0 48 48" aria-hidden="true"><path fill="currentColor" d="M6 30c2-6 6-9 11-10l4-7 3 6 9-1 6-4 3 5-5 3 2 8-4 2-1-5-5 1 1 9h-4l-1-7-6 1-2 7H13l1-7c-3 0-6 2-8 1z"/></svg>
+    <div>
+      <strong>Fixed point: Black Shuck Festival, Bungay, Friday 6 to Sunday 8 August</strong>
+      <p>Folklore festival around the black dog that burst into Bungay church in the storm of 1577. Parade, effigy burning, storytelling, music, theatre, an art exhibition. We are there on the Saturday whatever else happens. Everything below is a candidate: vote yes, maybe or no, and the tally updates for all three of us.</p>
+    </div>
+  </div>
+</header>
+
+<div class="bar"><div class="row">
+  <div class="who">
+    <label>Voting as</label>
+    <span class="me" id="me-name">nobody yet</span>
+  </div>
+  <div class="status" id="status"><span class="dot"></span><span id="status-text">Connecting</span><button type="button" class="clear" id="clear-all">Clear all my votes</button></div>
+</div></div>
+
+<div class="notice" id="notice" hidden></div>
+
+<div class="summary" id="summary"></div>
+
+<div id="groups"></div>
+
+<section class="group">
+  <h2>Decisions <small>pick one in each</small></h2>
+  <p class="lead">These shape the route, so a vote here matters more than any single stop.</p>
+  <div id="decisions"></div>
+</section>
+
+<section class="group">
+  <h2>Anything missing?</h2>
+  <p class="lead">Something you have always wanted to see out that way, or a place to stay you have heard of. Saved as you type.</p>
+  <textarea id="note" placeholder="Write here. It saves on its own."></textarea>
+  <div class="notes" id="notes"></div>
+</section>
+
+<footer>Opening days and prices for every item were checked in September 2026 and live in Alice's longer list. Benton End is a hope rather than a plan: its 2027 garden open days are not published yet.</footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+const VOTERS=["Alice","Sal","Tor"];
+const GROUPS=[
+ {id:"art",title:"Art and the Cedric Morris trail",lead:"South Suffolk mostly. Gainsborough's House and Benton End are twenty minutes apart.",items:[
+  {id:"gh",t:"Gainsborough's House, Sudbury",d:"The biggest Cedric Morris collection anywhere, plus a big Gainsborough anniversary show all summer. Free on Alice's Art Pass."},
+  {id:"be",t:"Benton End, Hadleigh",d:"Cedric Morris's house and garden, where Freud and Hambling were taught. Garden open days only; 2027 dates not out yet."},
+  {id:"fry",t:"Fry Art Gallery, Saffron Walden",d:"Bawden, Ravilious and the Great Bardfield artists. Only if we come via Cambridge."},
+  {id:"norart",t:"Sainsbury Centre and Norwich Castle",d:"Big galleries in Norwich, both free on the Art Pass. Needs a Norwich half day."}]},
+ {id:"junk",title:"Antiques, junk, vintage and car boots",lead:"Spread through the trip so there is one most days.",items:[
+  {id:"melford",t:"Long Melford antiques",d:"The biggest antiques centres in the region, several on one street. Clare Antiques in an old mill is twenty minutes on."},
+  {id:"earsham",t:"Earsham Hall Antiques",d:"A mile from Bungay. Country to mid-century, with a café. Closed Mondays."},
+  {id:"bungayshops",t:"Bungay, Beccles and Halesworth shops",d:"A handful of antique and vintage shops in each. Bungay has Fuzzypeg Folk (handmade folk art) and Mouse Design (interiors, local makers)."},
+  {id:"snape",t:"Snape Maltings",d:"Antiques centre with 30 dealers, craft shop, galleries by the river. Coast day."},
+  {id:"carboot",t:"Sunday morning car boot",d:"Harleston, Kessingland or Arminghall, all within half an hour of Bungay. Early start."},
+  {id:"auction",t:"An auction viewing",d:"Diss on Fridays, Keys at Aylsham on Mondays. Browsing rather than bidding, unless someone gets carried away."},
+  {id:"norvintage",t:"Norwich vintage and the Lanes",d:"Antiques in two old churches, vintage clothes shops, the market. Pairs with the galleries."}]},
+ {id:"gardens",title:"Gardens",lead:"East Ruston is Alice's must-see. The rest are on the way somewhere.",items:[
+  {id:"eastruston",t:"East Ruston Old Vicarage",d:"32 acres of garden rooms near the north east Norfolk coast. Closed Monday and Tuesday, so this is a Sunday."},
+  {id:"chatto",t:"Beth Chatto Gardens, Essex",d:"The famous dry garden, with a nursery. Closed Sunday and Monday, so on the way up on Thursday."},
+  {id:"hydehall",t:"RHS Hyde Hall, Essex",d:"Free on Alice's RHS card, right by the A130. An easy first stop."},
+  {id:"helmingham",t:"Helmingham Hall",d:"Moated Tudor house with a walled kitchen garden, between south Suffolk and Bungay."},
+  {id:"woottens",t:"Woottens of Wenhaston",d:"Specialist nursery near Halesworth, next to a church with a medieval Doom painting."},
+  {id:"raveningham",t:"Raveningham Gardens",d:"Walled kitchen garden and borders, 25 minutes from Bungay."}]},
+ {id:"weird",title:"Folk and weird England",lead:"The festival is the main event. These are the side quests.",items:[
+  {id:"blythburgh",t:"Blythburgh church",d:"Angel roof and the scorch marks on the door said to be the black dog's claws. Free, open daily, 25 minutes from Bungay."},
+  {id:"dunwich",t:"Dunwich",d:"The drowned town. Ruins, a small museum, a wild shingle beach and fish and chips at The Ship."},
+  {id:"suttonhoo",t:"Sutton Hoo and the Rendlesham UFO trail",d:"Ship burial mounds (free on National Trust) and a three-mile forest walk to the 1980 UFO site."},
+  {id:"horsey",t:"Horsey Windpump and the seals",d:"Climb the windpump, then walk to the seals on the beach. Ten minutes from East Ruston."},
+  {id:"plantation",t:"The Plantation Garden, Norwich",d:"Victorian garden in a chalk quarry with a gothic fountain. £2."},
+  {id:"orfordness",t:"Orford Ness",d:"Cold War pagodas and the Black Beacon on the shingle spit, by National Trust ferry. Must be pre-booked: tickets go on sale each Thursday for about two weeks ahead and sell out. Members pay the £4.50 ferry only."},
+  {id:"tattingstone",t:"Tattingstone Wonder",d:"Cottages disguised as a church, seen from the road near Ipswich. Five minutes, no stopping."}]},
+ {id:"coast",title:"Coast and swimming",lead:"The Suffolk coast is 45 minutes from Bungay, so probably one half day.",items:[
+  {id:"southwold",t:"Southwold and Walberswick",d:"Beach huts, pier, the foot ferry between the two, a few vintage and craft shops, fish at the harbour."},
+  {id:"aldeburgh",t:"Aldeburgh",d:"Fish huts on the beach, the Scallop, a good bookshop, craft society summer show."},
+  {id:"orford",t:"Orford",d:"Pump Street bakery and chocolate, oysters at the Oysterage. Closed Monday and Tuesday."},
+  {id:"lido",t:"Beccles Lido",d:"Heated outdoor pools ten minutes from Bungay. Good for a festival-morning swim."},
+  {id:"river",t:"River swim on the Waveney",d:"Outney Common at Bungay, or the lock at Geldeston by the pub."},
+  {id:"seapalling",t:"A proper sea swim in Norfolk",d:"Sea Palling has lagoons and lifeguards. Cromer has crab afterwards."}]},
+ {id:"food",title:"Food, no fine dining",lead:"Pubs, bakeries, farm shops and fish huts.",items:[
+  {id:"fenfarm",t:"Fen Farm Dairy shop, Bungay",d:"Baron Bigod brie, raw milk, pastries. Open all hours, a breakfast stop."},
+  {id:"locks",t:"The Locks Inn, Geldeston",d:"Community-owned pub at the end of a lane by the river, with a swimming spot. Fifteen minutes from Bungay."},
+  {id:"queens",t:"Queen's Head, Earsham",d:"Seventeenth-century brewpub, home of Waveney Brewing. Food wagon Fridays."},
+  {id:"magpies",t:"Two Magpies bakeries",d:"Branches in most of the towns we pass through. Coffee and pastry stops."},
+  {id:"nnfood",t:"North Norfolk food",d:"Cley Smokehouse, Cromer crab, Bray's Cottage pork pies. Only if we go that far north."},
+  {id:"mersea",t:"Company Shed, Mersea Island",d:"Oysters at trestle tables. Only if we start in Essex."}]}
+];
+const DECISIONS=[
+ {id:"start",title:"Where do we start on Thursday?",opts:[
+  {id:"south",t:"South Suffolk first",d:"Sudbury and Hadleigh Thursday, Bungay Friday to Sunday, Norfolk coast Sunday afternoon, home Monday."},
+  {id:"essex",t:"Essex first",d:"Hyde Hall or Beth Chatto and Mersea Thursday, south Suffolk Friday morning, Bungay by Friday evening."},
+  {id:"norfolk",t:"Norfolk first, work back",d:"Cambridge and Norwich Thursday, East Ruston Friday, Bungay Friday night to Sunday, south Suffolk Sunday, home Monday."}]},
+ {id:"pickup",title:"How do Sal and Tor join?",opts:[
+  {id:"collect",t:"Alice collects us on the way",d:"Oxford then Cambridge if we go via Norfolk or south Suffolk; London if we start in Essex."},
+  {id:"train",t:"We meet by train at the first stop",d:"Alice drives alone from Hampshire; we arrive by rail at Sudbury, Colchester, Ipswich or Norwich."}]}
+];
+
+const ITEMS=GROUPS.flatMap(g=>g.items);
+// Where votes are kept: the Google Apps Script web app in front of the "Black Shuck Road Trip votes" sheet.
+const SCRIPT_URL="https://script.google.com/macros/s/AKfycby3Ch5lRtF_pl01h5NqcTKtE6QKVs4ClwGi6zhpCsxLPSU3kZEh4LWKn8O2mvSjXlgCNQ/exec";
+const POLL_MS=6000;
+let db=null,myId=null,canWrite=null;   // db: true once the script URL is set; myId: the voter from the link
+let state={};          // other voters' docs by name: {voter, choices, decisions, note}
+let me={voter:"",choices:{},decisions:{},note:""};
+let dirty=false,writing=null,timer=null;
+
+const $=s=>document.querySelector(s);
+const el=(tag,cls,txt)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e;};
+
+function setStatus(kind,text){const s=$("#status");s.className="status "+kind;$("#status-text").textContent=text;}
+function notice(text){const n=$("#notice");n.hidden=!text;n.textContent=text||"";}
+
+// who voted what, by voter name (latest doc per name wins)
+function byVoter(){
+  const out={};
+  Object.values(state).forEach(d=>{if(d&&d.voter)out[d.voter]=d;});
+  if(me.voter)out[me.voter]=me;
+  return out;
+}
+
+function renderGroups(){
+  const root=$("#groups");root.replaceChildren();
+  GROUPS.forEach(g=>{
+    const sec=el("section","group");
+    const h=el("h2");h.textContent=g.title;const small=el("small",null,g.items.length+" ideas");h.append(" ",small);
+    sec.append(h,el("p","lead",g.lead));
+    const list=el("div","items");
+    g.items.forEach(it=>{
+      const row=el("div","item");row.dataset.id=it.id;
+      const txt=el("div","txt");txt.append(el("h3",null,it.t),el("p",null,it.d));
+      const v=el("div","vote");v.setAttribute("role","group");v.setAttribute("aria-label","Your vote on "+it.t);
+      ["yes","maybe","no"].forEach(k=>{const b=el("button",null,k[0].toUpperCase()+k.slice(1));b.type="button";b.dataset.v=k;b.setAttribute("aria-pressed","false");b.addEventListener("click",()=>vote(it.id,k));v.append(b);});
+      row.append(txt,v,el("div","tally"));
+      list.append(row);
+    });
+    sec.append(list);root.append(sec);
+  });
+  const droot=$("#decisions");droot.replaceChildren();
+  DECISIONS.forEach(d=>{
+    const box=el("div");box.style.marginBottom="18px";
+    box.append(el("h3",null,d.title));
+    const ch=el("div","choice");ch.dataset.id=d.id;
+    d.opts.forEach(o=>{
+      const lab=el("label","opt");
+      const r=el("input");r.type="radio";r.name="dec-"+d.id;r.value=o.id;r.id="dec-"+d.id+"-"+o.id;
+      r.addEventListener("change",()=>decide(d.id,o.id));
+      const t=el("div");t.append(el("h3",null,o.t),el("p",null,o.d),el("div","tally"));
+      lab.append(r,t);ch.append(lab);
+    });
+    const clr=el("button","clear","Clear my answer");clr.type="button";clr.addEventListener("click",()=>{if(me.decisions[d.id]){delete me.decisions[d.id];renderVotes();schedule();}});
+    box.append(ch,clr);droot.append(box);
+  });
+}
+
+function chipFor(name,val){const c=el("span","chip "+(val||""));c.textContent=name;if(val)c.title=name+": "+val;return c;}
+
+function renderVotes(){
+  const voters=byVoter();
+  const canVote=!!(db&&myId&&me.voter);
+  // items
+  ITEMS.forEach(it=>{
+    const row=document.querySelector('.item[data-id="'+it.id+'"]');if(!row)return;
+    const mine=me.choices[it.id]||"";
+    row.querySelectorAll(".vote button").forEach(b=>{b.setAttribute("aria-pressed",String(b.dataset.v===mine));b.disabled=!canVote;});
+    const t=row.querySelector(".tally");t.replaceChildren();
+    const vals=VOTERS.map(n=>voters[n]?(voters[n].choices||{})[it.id]||"":"");
+    if(vals.every(v=>v==="yes"))t.append(chipFor("All three say yes","all"));
+    VOTERS.forEach((n,i)=>{if(vals[i])t.append(chipFor(n,vals[i]));});
+    if(!vals.some(Boolean))t.append(el("span","chip",canVote?"No votes yet":"Waiting for votes"));
+  });
+  // decisions
+  DECISIONS.forEach(d=>{
+    const box=document.querySelector('.choice[data-id="'+d.id+'"]');if(!box)return;
+    d.opts.forEach(o=>{
+      const r=box.querySelector("#dec-"+d.id+"-"+o.id);r.checked=(me.decisions[d.id]===o.id);r.disabled=!canVote;
+      const t=r.parentElement.querySelector(".tally");t.replaceChildren();
+      VOTERS.forEach(n=>{if(voters[n]&&(voters[n].decisions||{})[d.id]===o.id)t.append(chipFor(n,"yes"));});
+    });
+  });
+  // notes
+  const notes=$("#notes");notes.replaceChildren();
+  VOTERS.forEach(n=>{const d=voters[n];if(d&&d.note&&n!==me.voter){const b=el("div","note");b.append(el("b",null,n),document.createTextNode(d.note));notes.append(b);}});
+  const ta=$("#note");ta.disabled=!canVote;if(document.activeElement!==ta)ta.value=me.note||"";
+  $("#me-name").textContent=me.voter||"nobody yet";
+  renderSummary(voters);
+}
+
+function renderSummary(voters){
+  const s=$("#summary");s.replaceChildren();
+  const votedBy=VOTERS.filter(n=>voters[n]&&Object.keys(voters[n].choices||{}).length);
+  const all=[],split=[];
+  ITEMS.forEach(it=>{
+    const vals=VOTERS.map(n=>voters[n]?(voters[n].choices||{})[it.id]||"":"").filter(Boolean);
+    if(vals.length===3&&vals.every(v=>v==="yes"))all.push(it.t);
+    else if(vals.includes("yes")&&vals.includes("no"))split.push(it.t);
+  });
+  const c1=el("div","card");c1.append(el("div","eyebrow","Voted so far"),el("div","n",votedBy.length+" of 3"));
+  c1.append(el("p","empty",votedBy.length?votedBy.join(", "):"Open your own link to start."));
+  const c2=el("div","card");c2.append(el("div","eyebrow","All three say yes"),el("div","n",String(all.length)));
+  if(all.length){const u=el("ul");all.slice(0,8).forEach(t=>u.append(el("li",null,t)));if(all.length>8)u.append(el("li",null,"and "+(all.length-8)+" more"));c2.append(u);}else c2.append(el("p","empty","Nothing unanimous yet."));
+  const c3=el("div","card");c3.append(el("div","eyebrow","Split, a yes and a no"),el("div","n",String(split.length)));
+  if(split.length){const u=el("ul");split.slice(0,8).forEach(t=>u.append(el("li",null,t)));if(split.length>8)u.append(el("li",null,"and "+(split.length-8)+" more"));c3.append(u);}else c3.append(el("p","empty","No disagreements yet."));
+  s.append(c1,c2,c3);
+}
+
+// ---- writes: one at a time, coalesced ----
+function schedule(){dirty=true;clearTimeout(timer);timer=setTimeout(flush,500);}
+async function flush(){
+  if(!db||!myId||!dirty)return;
+  if(writing){await writing;return flush();}
+  dirty=false;
+  const body={voter:me.voter,choices:me.choices,decisions:me.decisions,note:me.note};
+  setStatus("live","Saving");
+  // A plain-text POST avoids a CORS preflight, which Apps Script cannot answer.
+  writing=fetch(SCRIPT_URL,{method:"POST",body:JSON.stringify(body)}).then(r=>r.json()).then(j=>{
+    if(!j||!j.ok)throw new Error(j&&j.error||"save failed");
+    applyVotes(j.votes);setStatus("live","Saved");notice("");
+  }).catch(e=>{
+    dirty=true;   // keep the unsaved changes and try again on the next poll
+    setStatus("off","Not saved");notice("Saving failed ("+(e&&e.message||"unknown")+"). Your votes are still on this page and will be retried.");
+  }).finally(()=>{writing=null;});
+  await writing;
+}
+function vote(id,val){if(!(db&&myId&&me.voter))return;me.choices[id]=(me.choices[id]===val)?"":val;if(!me.choices[id])delete me.choices[id];renderVotes();schedule();}
+function decide(did,oid){if(!(db&&myId&&me.voter))return;me.decisions[did]=oid;renderVotes();schedule();}
+
+$("#clear-all").addEventListener("click",()=>{if(!(db&&myId&&me.voter))return;me.choices={};me.decisions={};me.note="";renderVotes();schedule();});
+$("#note").addEventListener("input",e=>{if(!(db&&myId&&me.voter))return;me.note=e.target.value;schedule();});
+
+// Take the server's copy for everyone else, and for me only when I have nothing unsaved.
+function applyVotes(votes){
+  const next={};
+  Object.keys(votes||{}).forEach(n=>{if(VOTERS.includes(n)&&n!==me.voter)next[n]=votes[n];});
+  state=next;
+  if(me.voter&&votes&&votes[me.voter]&&!dirty&&!writing){
+    const dd=votes[me.voter];
+    me={voter:me.voter,choices:Object.assign({},dd.choices||{}),decisions:Object.assign({},dd.decisions||{}),note:dd.note||""};
+  }
+  renderVotes();
+}
+async function poll(){
+  try{
+    const r=await fetch(SCRIPT_URL+"?t="+Date.now(),{cache:"no-store"});
+    const j=await r.json();
+    if(j&&j.ok){applyVotes(j.votes);if(!dirty&&!writing)setStatus(myId?"live":"off",myId?"Live":"Read only");}
+  }catch(e){setStatus("off","Connection lost");}
+  if(dirty&&!writing)flush();
+}
+
+renderGroups();
+renderVotes();
+
+(function boot(){
+  const who=new URLSearchParams(location.search).get("who")||"";
+  const name=VOTERS.find(v=>v.toLowerCase()===who.toLowerCase())||"";
+  if(SCRIPT_URL.indexOf("__")===0){setStatus("off","Not connected");notice("The vote store has not been connected yet.");renderVotes();return;}
+  db=true;
+  if(!name){
+    setStatus("off","Read only");
+    notice("You are reading without a name, so the tally shows but you cannot vote. Use the personal link Alice sent you.");
+  }else{
+    myId=name;me.voter=name;
+    setStatus("live","Connecting");
+  }
+  renderVotes();
+  poll();
+  setInterval(poll,POLL_MS);
+})();
+})();
+</script>
+
+</body></html>
